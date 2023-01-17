@@ -1,0 +1,56 @@
+{% extends 'main_app/base.html' %}
+{% block title %}Home page{% endblock %}
+
+
+{% block content %}
+
+<ul class="nav nav-tabs mb-2">
+    <li class="nav-item">
+        <a class="nav-link {% if active == 'all' %}active{% endif %}" href="/">All</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active == 'GW' %}active{% endif %}" href="/grinding-wheels">Grinding wheels</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active == 'HG' %}active{% endif %}" href="/hand-gloves">Hand gloves</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if active == 'SE' %}active{% endif %}" href="/safety-equipment">Safety equipment</a>
+    </li>
+</ul>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4">
+        {% for product in products %}
+        <div class="px-4 py-2 p-sm-1">
+            <div class="card">
+                <img src="{{product.img_url.url}}" class="card-img-top lazy p-3" alt="{{product.name}}_img"
+                     style="height: 180px;">
+                <div class="card-body">
+                    <div>
+                        <h5 class="card-title">{{product.name}}</h5>
+                        <p>{{product.price}}</p>
+                        <p>{{product.short_description}}</p>
+                    </div>
+                    <a href="{% url 'product_detail' product.name %}"
+                       class="btn btn-primary {% if not user.is_staff %}stretched-link{% endif %}">Product
+                        Details</a>
+                </div>
+                {% if user.is_staff %}
+                <div class="card-footer">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" value="{{product.id}}" name="product-id">Delete
+                            Product
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <h1>No Products In stock :( </h1>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

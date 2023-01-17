@@ -1,0 +1,55 @@
+{% extends 'main_app/base.html' %}
+{% block title %}Home page{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    {% if cart_products.2 %}
+    <table class="table table-light">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">product</th>
+            <th scope="col">quantity</th>
+            <th scope="col">unit price</th>
+            <th scope="col">total</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for product in cart_products.0 %}
+        <tr class="table-secondary">
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ product.0.name }}</td>
+            <td>{{ product.1 }}</td>
+            <td> &#8377; {{ product.0.price }}</td>
+            <td> &#8377; {% widthratio product.0.price 1 product.1 %}</td>
+            <td>
+                <form method="post" action="{% url 'cart' product.0.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th scope="row"></th>
+            <td> grand total</td>
+            <td>{{ cart_products.2 }}</td>
+            <td></td>
+            <td> &#8377; {{ cart_products.1 }}</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <div>
+        <h5 class="text-muted">Your Cart is Empty</h5>
+    </div>
+    {% endif %}
+    <div class="d-flex justify-content-evenly">
+        <a class="btn btn-primary" href="/" role="button"> Continue shopping </a>
+        <a class="btn btn-primary" href="/contact" role="button"> Contact </a>
+    </div>
+</div>
+{% endblock %}

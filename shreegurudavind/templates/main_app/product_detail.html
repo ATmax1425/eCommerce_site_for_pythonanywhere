@@ -1,0 +1,88 @@
+{% extends 'main_app/base.html' %}
+{% block title %}Product details{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="/">All</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if product.type == 'GW' %}active{% endif %}" href="/grinding-wheels">Grinding wheels</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if product.type == 'HG' %}active{% endif %}" href="/hand-gloves">Hand gloves</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if product.type == 'SE' %}active{% endif %}" href="/safety-equipment">Safety equipment</a>
+    </li>
+</ul>
+
+<div class="container-md mt-2">
+    <div class="row">
+        <div class="col-sm-4">
+            {% if img_list.1 %}
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                            class="active" aria-current="true" aria-label="Slide 1"></button>
+                    {% for i in img_list.0 %}
+                    <li data-target="#carouselControls" data-slide-to=""></li>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ i }}"
+                            aria-label="Slide {{ i }}"></button>
+                    {% endfor %}
+
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{product.img_url.url}}" class="d-block w-100" alt="...">
+                    </div>
+
+                    {% for i in img_list.1 %}
+                    <div class="carousel-item">
+                        <img src="{{ i.url }}" class="d-block w-100" alt="{{ i }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            {% else %}
+            <img src="{{product.img_url}}" class="img-fluid" alt="{{product.id}}">
+            {% endif %}
+        </div>
+        <div class="col-sm-6">
+            <h1>{{ product.name }}</h1>
+            <h3> &#8377; {{ product.price }}</h3>
+            <table class="table">
+                <tbody>
+                {% for des in description %}
+                <tr>
+                    <td>{{ des.0 }}</td>
+                    <td>{{ des.1 }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-success mt-2">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

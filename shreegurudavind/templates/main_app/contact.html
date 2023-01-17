@@ -1,0 +1,24 @@
+{% extends 'main_app/base.html' %}
+{% block title %}contact{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container pt-5">
+
+{% if user.is_authenticated %}
+    {% if form %}
+    <h3>Please fill your contact information her</h3>
+    <form method="post" class="px-2">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success my-2">Submit</button>
+    </form>
+    {% else %}
+    <h3>Thank you for your time, we will contact you on provided email/phone number in working days</h3>
+    <a class="btn btn-primary" href="/" role="button"> Continue shopping </a>
+    {% endif %}
+{% else %}
+    <h3>Please login to continue shopping with us</h3>
+{% endif %}
+</div>
+{% endblock %}
